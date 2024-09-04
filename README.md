@@ -41,10 +41,7 @@ Before running the application, ensure you have the following installed:
 
 1. **Clone the Repository:**
    ```bash
-   https://github.com/Dipanjan2910/hotel-booking-system.git
-   ```
-   ```bash
-   cd Hotel_Booking_System
+   https://github.com/Dipanjan2910/30743647-hotel-booking-system.git
    ```
 
 2. **Create the Database:**
