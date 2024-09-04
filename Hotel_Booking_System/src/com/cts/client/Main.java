@@ -7,6 +7,8 @@ import com.cts.service.BookingServices;
 import com.cts.service.CustomerServices;
 import com.cts.service.RoomServices;
 import com.cts.util.CustomException;
+import com.cts.util.NotAvailableException;
+import com.cts.util.NotFoundException;
 
 import java.sql.Date;
 import java.util.Scanner;
@@ -41,7 +43,7 @@ public class Main {
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException("Something went wrong. " + e.getMessage());
+            System.out.println("\n" + e.getMessage());
         }
     } // End of main method
 
@@ -84,7 +86,7 @@ public class Main {
                         if(roomFound) {
                             roomServices.viewRoomDetails(roomId);
                         } else {
-                            System.out.println("\nRoom not found!");
+                            throw new NotFoundException("\nRoom not found!");
                         }
                     }
                     case 3 -> roomServices.viewAllRooms();
@@ -107,7 +109,7 @@ public class Main {
 
                             roomServices.updateRoom(new Room(roomNumber, type, price, status), roomId);
                         } else {
-                            System.out.println("\nRoom not found!");
+                            throw new NotFoundException("\nRoom not found!");
                         }
                     }
                     case 5 -> {
@@ -117,7 +119,7 @@ public class Main {
                         if(roomFound) {
                             roomServices.deleteRoom(roomId);
                         } else {
-                            System.out.println("\nRoom not found!");
+                            throw new NotFoundException("\nRoom not found!");
                         }
                     }
                     case 0 -> {
@@ -127,7 +129,7 @@ public class Main {
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException("Something went wrong. " + e.getMessage());
+            System.out.println(e.getMessage());
         }
     }  // End of manageRooms method
 
@@ -137,7 +139,7 @@ public class Main {
 
         try {
             while (true) {
-                System.out.println("\nRoom Management Menu:");
+                System.out.println("\nCustomer Management Menu:");
                 System.out.println("---------------------");
                 System.out.println("1. Add a New Customer");
                 System.out.println("2. View Customer Details");
@@ -168,7 +170,7 @@ public class Main {
                         if(customerFound) {
                             customerServices.viewCustomerDetails(customerId);
                         } else {
-                            System.out.println("\nCustomer not found!");
+                            throw new NotFoundException("\nCustomer not found!");
                         }
                     }
                     case 3 -> customerServices.viewAllCustomers();
@@ -189,7 +191,7 @@ public class Main {
 
                             customerServices.updateCustomer(new Customer(name, email, phoneNumber), customerId);
                         } else {
-                            System.out.println("\nCustomer not found!");
+                            throw new NotFoundException("\nCustomer not found!");
                         }
                     }
                     case 5 -> {
@@ -199,7 +201,7 @@ public class Main {
                         if(customerFound) {
                             customerServices.deleteCustomer(customerId);
                         } else {
-                            System.out.println("\nCustomer not found!");
+                            throw new NotFoundException("\nCustomer not found!");
                         }
                     }
                     case 0 -> {
@@ -209,7 +211,7 @@ public class Main {
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException("Something went wrong. " + e.getMessage());
+            System.out.println(e.getMessage());
         }
     }  // End of manageCustomers method
 
@@ -236,20 +238,17 @@ public class Main {
                         int roomId = sc.nextInt();
                         boolean roomFound = customException.roomExists(roomId);
                         if(!roomFound) {
-                            System.out.println("\nRoom not found!");
-                            break;
+                            throw new NotFoundException("\nRoom not found!");
                         }
                         boolean roomAvailable = customException.roomAvailable(roomId);
                         if(!roomAvailable) {
-                            System.out.println("\nRoom not available!");
-                            break;
+                            throw new NotAvailableException("\nRoom not available!");
                         }
                         System.out.print("Enter customer Id: ");
                         int customerId = sc.nextInt();
                         boolean customerFound = customException.customerExists(customerId);
                         if(!customerFound) {
-                            System.out.println("\nCustomer not found!");
-                            break;
+                            throw new NotFoundException("\nCustomer not found!");
                         }
                         System.out.print("Enter check-in date(YYYY-MM-DD): ");
                         Date checkInDate = Date.valueOf(sc.next());
@@ -265,7 +264,7 @@ public class Main {
                         if(bookingFound) {
                             bookingServices.viewBookingDetails(bookingId);
                         } else {
-                            System.out.println("\nBooking not found!");
+                            throw new NotFoundException("\nBooking not found!");
                         }
                     }
                     case 3 -> bookingServices.viewAllBookings();
@@ -276,7 +275,7 @@ public class Main {
                         if(bookingFound) {
                             bookingServices.deleteBooking(bookingId);
                         } else {
-                            System.out.println("\nBooking not found!");
+                            throw new NotFoundException("\nBooking not found!");
                         }
                     }
                     case 0 -> {
@@ -286,7 +285,7 @@ public class Main {
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException("Something went wrong. " + e.getMessage());
+            System.out.println(e.getMessage());
         }
     } // End of manageBookings method
 }
