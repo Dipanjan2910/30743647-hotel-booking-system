@@ -7,6 +7,7 @@ import com.cts.service.BookingServices;
 import com.cts.service.CustomerServices;
 import com.cts.service.RoomServices;
 import com.cts.util.CustomException;
+import com.cts.util.HasBookingException;
 import com.cts.util.NotAvailableException;
 import com.cts.util.NotFoundException;
 
@@ -94,33 +95,41 @@ public class Main {
                         System.out.print("\nEnter room Id to update: ");
                         int roomId = sc.nextInt();
                         boolean roomFound = customException.roomExists(roomId);
-                        if(roomFound) {
-                            roomServices.viewRoomDetails(roomId);
-
-                            System.out.print("\nEnter new room number: ");
-                            String roomNumber = sc.next();
-                            System.out.print("Enter new room type: ");
-                            String type = sc.nextLine();
-                            type += sc.nextLine();
-                            System.out.print("Enter new room price(Rs.): ");
-                            double price = sc.nextDouble();
-                            System.out.print("Enter new room status(available/booked): ");
-                            String status = sc.next();
-
-                            roomServices.updateRoom(new Room(roomNumber, type, price, status), roomId);
-                        } else {
+                        if(!roomFound) {
                             throw new NotFoundException("\nRoom not found!");
                         }
+
+                        roomServices.viewRoomDetails(roomId);
+
+                        boolean roomUse = customException.roomInUse(roomId);
+                        if(roomUse) {
+                            throw new HasBookingException("\nCan't update! Room is booked.");
+                        }
+
+                        System.out.print("\nEnter new room number: ");
+                        String roomNumber = sc.next();
+                        System.out.print("Enter new room type: ");
+                        String type = sc.nextLine();
+                        type += sc.nextLine();
+                        System.out.print("Enter new room price(Rs.): ");
+                        double price = sc.nextDouble();
+                        System.out.print("Enter new room status(available/booked): ");
+                        String status = sc.next();
+
+                        roomServices.updateRoom(new Room(roomNumber, type, price, status), roomId);
                     }
                     case 5 -> {
                         System.out.print("\nEnter room Id to delete: ");
                         int roomId = sc.nextInt();
                         boolean roomFound = customException.roomExists(roomId);
-                        if(roomFound) {
-                            roomServices.deleteRoom(roomId);
-                        } else {
+                        if(!roomFound) {
                             throw new NotFoundException("\nRoom not found!");
                         }
+                        boolean roomUse = customException.roomInUse(roomId);
+                        if(roomUse) {
+                            throw new HasBookingException("\nCan't delete! Room is booked.");
+                        }
+                        roomServices.deleteRoom(roomId);
                     }
                     case 0 -> {
                         return;
@@ -178,31 +187,39 @@ public class Main {
                         System.out.print("\nEnter customer Id to update: ");
                         int customerId = sc.nextInt();
                         boolean customerFound = customException.customerExists(customerId);
-                        if(customerFound) {
-                            customerServices.viewCustomerDetails(customerId);
-
-                            System.out.print("\nEnter new name: ");
-                            String name = sc.nextLine();
-                            name += sc.nextLine();
-                            System.out.print("Enter new email: ");
-                            String email = sc.next();
-                            System.out.print("Enter new phone number: ");
-                            String phoneNumber = sc.next();
-
-                            customerServices.updateCustomer(new Customer(name, email, phoneNumber), customerId);
-                        } else {
+                        if(!customerFound) {
                             throw new NotFoundException("\nCustomer not found!");
                         }
+
+                        customerServices.viewCustomerDetails(customerId);
+
+                        boolean customerUse = customException.customerInUse(customerId);
+                        if(customerUse) {
+                            throw new HasBookingException("\nCan't update! Customer has booking.");
+                        }
+
+                        System.out.print("\nEnter new name: ");
+                        String name = sc.nextLine();
+                        name += sc.nextLine();
+                        System.out.print("Enter new email: ");
+                        String email = sc.next();
+                        System.out.print("Enter new phone number: ");
+                        String phoneNumber = sc.next();
+
+                        customerServices.updateCustomer(new Customer(name, email, phoneNumber), customerId);
                     }
                     case 5 -> {
                         System.out.print("\nEnter customer Id to remove: ");
                         int customerId = sc.nextInt();
                         boolean customerFound = customException.customerExists(customerId);
-                        if(customerFound) {
-                            customerServices.deleteCustomer(customerId);
-                        } else {
+                        if(!customerFound) {
                             throw new NotFoundException("\nCustomer not found!");
                         }
+                        boolean customerUse = customException.customerInUse(customerId);
+                        if(customerUse) {
+                            throw new HasBookingException("\nCan't remove! Customer has booking.");
+                        }
+                        customerServices.deleteCustomer(customerId);
                     }
                     case 0 -> {
                         return;

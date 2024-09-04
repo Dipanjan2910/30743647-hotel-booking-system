@@ -51,4 +51,26 @@ public class CustomException {
         }
         return false;
     } // End of roomAvailable exception
+
+    public boolean roomInUse(int roomId) throws SQLException {
+        String findRoomSql = "SELECT * FROM bookings WHERE room_id = " + roomId;
+
+        try (Connection conn = connectDB.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rset = stmt.executeQuery(findRoomSql)){
+
+            return rset.next();
+        }
+    } // End of roomInUse exception
+
+    public boolean customerInUse(int customerId) throws SQLException {
+        String findRoomSql = "SELECT * FROM bookings WHERE customer_id = " + customerId;
+
+        try (Connection conn = connectDB.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rset = stmt.executeQuery(findRoomSql)){
+
+            return rset.next();
+        }
+    } // End of customerInUse exception
 }
