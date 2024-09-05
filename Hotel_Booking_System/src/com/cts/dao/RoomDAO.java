@@ -1,11 +1,11 @@
-package com.cts.service;
+package com.cts.dao;
 
 import com.cts.model.Room;
 import com.cts.util.ConnectDB;
 
 import java.sql.*;
 
-public class RoomServices {
+public class RoomDAO {
     ConnectDB connectDB = new ConnectDB();
 
     public void addRoom(Room room) throws SQLException {

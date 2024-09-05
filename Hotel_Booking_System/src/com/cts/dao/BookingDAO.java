@@ -1,11 +1,11 @@
-package com.cts.service;
+package com.cts.dao;
 
 import com.cts.model.Booking;
 import com.cts.util.ConnectDB;
 
 import java.sql.*;
 
-public class BookingServices {
+public class BookingDAO {
     ConnectDB connectDB = new ConnectDB();
 
     public void addBooking(Booking booking) throws SQLException {

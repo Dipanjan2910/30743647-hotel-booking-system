@@ -1,11 +1,11 @@
-package com.cts.service;
+package com.cts.dao;
 
 import com.cts.model.Customer;
 import com.cts.util.ConnectDB;
 
 import java.sql.*;
 
-public class CustomerServices {
+public class CustomerDAO {
     ConnectDB connectDB = new ConnectDB();
 
     public void addCustomer(Customer customer) throws SQLException {

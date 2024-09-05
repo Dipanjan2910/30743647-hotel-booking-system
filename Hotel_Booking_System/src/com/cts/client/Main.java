@@ -3,9 +3,9 @@ package com.cts.client;
 import com.cts.model.Booking;
 import com.cts.model.Customer;
 import com.cts.model.Room;
-import com.cts.service.BookingServices;
-import com.cts.service.CustomerServices;
-import com.cts.service.RoomServices;
+import com.cts.dao.BookingDAO;
+import com.cts.dao.CustomerDAO;
+import com.cts.dao.RoomDAO;
 import com.cts.util.CustomException;
 import com.cts.util.HasBookingException;
 import com.cts.util.NotAvailableException;
@@ -49,7 +49,7 @@ public class Main {
     } // End of main method
 
     private static void manageRooms(Scanner sc) {
-        RoomServices roomServices = new RoomServices();
+        RoomDAO roomDao = new RoomDAO();
         CustomException customException = new CustomException();
 
         try {
@@ -78,19 +78,19 @@ public class Main {
                         System.out.print("Enter room status(available/booked): ");
                         String status = sc.next();
 
-                        roomServices.addRoom(new Room(roomNumber, type, price, status));
+                        roomDao.addRoom(new Room(roomNumber, type, price, status));
                     }
                     case 2 -> {
                         System.out.print("\nEnter room Id: ");
                         int roomId = sc.nextInt();
                         boolean roomFound = customException.roomExists(roomId);
                         if(roomFound) {
-                            roomServices.viewRoomDetails(roomId);
+                            roomDao.viewRoomDetails(roomId);
                         } else {
                             throw new NotFoundException("\nRoom not found!");
                         }
                     }
-                    case 3 -> roomServices.viewAllRooms();
+                    case 3 -> roomDao.viewAllRooms();
                     case 4 -> {
                         System.out.print("\nEnter room Id to update: ");
                         int roomId = sc.nextInt();
@@ -99,7 +99,7 @@ public class Main {
                             throw new NotFoundException("\nRoom not found!");
                         }
 
-                        roomServices.viewRoomDetails(roomId);
+                        roomDao.viewRoomDetails(roomId);
 
                         boolean roomUse = customException.roomInUse(roomId);
                         if(roomUse) {
@@ -116,7 +116,7 @@ public class Main {
                         System.out.print("Enter new room status(available/booked): ");
                         String status = sc.next();
 
-                        roomServices.updateRoom(new Room(roomNumber, type, price, status), roomId);
+                        roomDao.updateRoom(new Room(roomNumber, type, price, status), roomId);
                     }
                     case 5 -> {
                         System.out.print("\nEnter room Id to delete: ");
@@ -129,7 +129,7 @@ public class Main {
                         if(roomUse) {
                             throw new HasBookingException("\nCan't delete! Room is booked.");
                         }
-                        roomServices.deleteRoom(roomId);
+                        roomDao.deleteRoom(roomId);
                     }
                     case 0 -> {
                         return;
@@ -143,7 +143,7 @@ public class Main {
     }  // End of manageRooms method
 
     private static void manageCustomers(Scanner sc) {
-        CustomerServices customerServices = new CustomerServices();
+        CustomerDAO customerDao = new CustomerDAO();
         CustomException customException = new CustomException();
 
         try {
@@ -170,19 +170,19 @@ public class Main {
                         System.out.print("Enter phone number: ");
                         String phoneNumber = sc.next();
 
-                        customerServices.addCustomer(new Customer(name, email, phoneNumber));
+                        customerDao.addCustomer(new Customer(name, email, phoneNumber));
                     }
                     case 2 -> {
                         System.out.print("\nEnter customer Id: ");
                         int customerId = sc.nextInt();
                         boolean customerFound = customException.customerExists(customerId);
                         if(customerFound) {
-                            customerServices.viewCustomerDetails(customerId);
+                            customerDao.viewCustomerDetails(customerId);
                         } else {
                             throw new NotFoundException("\nCustomer not found!");
                         }
                     }
-                    case 3 -> customerServices.viewAllCustomers();
+                    case 3 -> customerDao.viewAllCustomers();
                     case 4 -> {
                         System.out.print("\nEnter customer Id to update: ");
                         int customerId = sc.nextInt();
@@ -191,7 +191,7 @@ public class Main {
                             throw new NotFoundException("\nCustomer not found!");
                         }
 
-                        customerServices.viewCustomerDetails(customerId);
+                        customerDao.viewCustomerDetails(customerId);
 
                         boolean customerUse = customException.customerInUse(customerId);
                         if(customerUse) {
@@ -206,7 +206,7 @@ public class Main {
                         System.out.print("Enter new phone number: ");
                         String phoneNumber = sc.next();
 
-                        customerServices.updateCustomer(new Customer(name, email, phoneNumber), customerId);
+                        customerDao.updateCustomer(new Customer(name, email, phoneNumber), customerId);
                     }
                     case 5 -> {
                         System.out.print("\nEnter customer Id to remove: ");
@@ -219,7 +219,7 @@ public class Main {
                         if(customerUse) {
                             throw new HasBookingException("\nCan't remove! Customer has booking.");
                         }
-                        customerServices.deleteCustomer(customerId);
+                        customerDao.deleteCustomer(customerId);
                     }
                     case 0 -> {
                         return;
@@ -233,7 +233,7 @@ public class Main {
     }  // End of manageCustomers method
 
     private static void manageBookings(Scanner sc) {
-        BookingServices bookingServices = new BookingServices();
+        BookingDAO bookingDao = new BookingDAO();
         CustomException customException = new CustomException();
 
         try {
@@ -272,25 +272,25 @@ public class Main {
                         System.out.print("Enter check-out date(YYYY-MM-DD): ");
                         Date checkOutDate = Date.valueOf(sc.next());
 
-                        bookingServices.addBooking(new Booking(roomId, customerId, checkInDate, checkOutDate));
+                        bookingDao.addBooking(new Booking(roomId, customerId, checkInDate, checkOutDate));
                     }
                     case 2 -> {
                         System.out.print("\nEnter booking Id: ");
                         int bookingId = sc.nextInt();
                         boolean bookingFound = customException.bookingExists(bookingId);
                         if(bookingFound) {
-                            bookingServices.viewBookingDetails(bookingId);
+                            bookingDao.viewBookingDetails(bookingId);
                         } else {
                             throw new NotFoundException("\nBooking not found!");
                         }
                     }
-                    case 3 -> bookingServices.viewAllBookings();
+                    case 3 -> bookingDao.viewAllBookings();
                     case 4 -> {
                         System.out.print("\nEnter booking Id to cancel: ");
                         int bookingId = sc.nextInt();
                         boolean bookingFound = customException.bookingExists(bookingId);
                         if(bookingFound) {
-                            bookingServices.deleteBooking(bookingId);
+                            bookingDao.deleteBooking(bookingId);
                         } else {
                             throw new NotFoundException("\nBooking not found!");
                         }
